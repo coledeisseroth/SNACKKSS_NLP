@@ -1,0 +1,77 @@
+ABLATION 
+Antisense Inhibition
+Conditional KO in keratinocytes
+ Conditional KO in the B lineage
+Conditional KO on inmortalized MEFs
+Conditional KO under Crx promoter
+Control = siRNA inhibition vs. Treatment = overexpression
+cpb heterozygous mice
+defectivemutant
+deficiency
+Deficiency
+Deficiency - Ablation
+Deficiency - Heterozygous deletion
+deficiency (mutation)
+Deficiency - NULL MUTATION
+deletion
+Deletion
+DELETION
+Deletion - for the second exon 
+Depletion
+DEPLETION
+depletion (at 12-14 month old)
+Depletion - Early passage
+DEPLETION -Late passage
+Depletion - siRNA
+DEPLETION - siRNA siMut10
+DEPLETION - siRNA siMut12
+gene truncation
+Global supression
+heterocygotic for Hspa9+/-
+Heterozygotic knockout (Abca1 +/-)
+Heterozygotic knockout (Abca1+/-)
+Heterozygotic knockout (Cdk4 +/-)
+Heterozygotic knockout (NF1+/-)
+INACTIVATION - siRNA
+Intestinal Epithelial Cells specific deletion of HDAC3
+KD
+knockdown
+knock-down (63 shRNA, with lysophosphatidic acid agent treatment
+knock-down (65 shRNA, with lysophosphatidic acid agent treatment
+Knock-down, shRNA
+knock-down (shRNA 2-4)
+knock-down (shRNA 4-1, doxycycline-induced)
+knock-down (shRNA 6-16, doxycycline-induced)
+knock-down using shRNA targeting p63 transactivating (TA) domain
+knock-down (with LIF agent treatment)
+knockout
+knock-out (female)
+knock-out (male)
+knock-out (treated with 2 ug/ml tunicamycin for 4 hours)
+knock-out (treated with 2 ug/ml tunicamycin for 8 hours)
+KO
+ KO in the B lineage
+myc +/- vs. WT
+Myc +/- vs. WT
+Null mutation
+NULL MUTATION
+NULL MUTATION - Ablation
+Null mutation (IFN-beta agent treatment, 2/4 hours)
+Null mutation (IFN-gamma agent treatment, 2/4 hours)
+Null mutation (low far, high carbohydrate)
+RNAi Knock down
+shRNA 
+silencing
+Silencing
+Silencing - siRNA
+Silencing - siRNA1
+Silencing - siRNA2
+Silencing - siRNA3
+siOGT
+siRNA
+siTNF
+siTNF-OMe
+siTNF-OMeP
+truncated at residue m291
+Truncated Expression ( GATA-1deltaNeodeltaHS mutant)
+Truncation of gene product
