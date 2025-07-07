@@ -14,7 +14,7 @@ elif [ $(echo $model | grep biobert | wc -l) -gt 0 ]; then hfmodel='dmis-lab/bio
 else hfmodel='microsoft/BiomedNLP-BiomedBERT-base-uncased-abstract-fulltext'
 fi
 mkdir $pert/$db/$model
-bash src/target_classification.sh $pert/$db/$model $pert/$db/target_names.txt ../metadata/$db/sample_info_protocols.txt $hfmodel ../metadata/$db/split ../raw/target_label_list.txt
+bash src/target_classification.sh $pert/$db/$model $pert/$db/target_names.txt ../metadata/$db/sample_info_protocols.txt $hfmodel ../metadata/$db/split
 done
 done
 done
@@ -37,7 +37,7 @@ model=$(echo $modelname | tr '[:upper:]' '[:lower:]')
 for train in 1 2 12 21; do
 comboname=$(echo $train | sed 's/12/SNACKKSS_MC+CREEDS/g' | sed 's/21/CREEDS+SNACKKSS_MC/g' | sed 's/1/SNACKKSS_MC/g' | sed 's/2/CREEDS/g')
 for test in 1 2; do
-if [ $(echo test | grep 1 | wc -l) -gt 0 ]; then db=SNACKKSS_MC; else db=CREEDS; fi
+if [ $(echo $test | grep 1 | wc -l) -gt 0 ]; then db=SNACKKSS_MC; else db=CREEDS; fi
 cat $pert/$db/$model/position_labels_test/* | cut -f-2 | sed 's/;/\t/g' | awk 'BEGIN {FS = "\t"} {for(i = 2; i <= NF; i++) {print $1 "\t" $i}}' | grep ":"$label | cut -d: -f1 | awk '$2 != ""' | sort -u | comm - <(cat $pert/combo/$model/predictions${train}.${test}_merged/* | cut -f-2 | sed 's/;/\t/g' | awk 'BEGIN {FS = "\t"} {for(i = 2; i <= NF; i++) {print $1 "\t" $i}}' | grep ":"$label | cut -d: -f1 | awk '$2 != ""' | sort -u) | awk 'BEGIN {FS = "\t"; tp = 0; fp = 0; fn = 0} {if($2 == ""){tp++} else if($1 == ""){fp++} else{fn++}} END {precision = tp / (tp + fp + 1); recall = tp / (tp + fn + 1); print tp "\t" fp "\t" fn}'
 done | paste -sd$'\t' | awk '{print "'$modelname'+'$comboname'\t" $0}'
 done

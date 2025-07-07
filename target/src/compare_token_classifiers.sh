@@ -58,3 +58,10 @@ for split in $(ls $models1); do
 python3 $srcdir/target_predict.py <(cat $test2/$split.txt | cut -f1,3 | sort -u) $OUT_DIR/models21/$split > $OUT_DIR/predictions21.2/$split.txt
 done
 
+for train in 1 2 12 21; do for test in 1 2; do
+mkdir $OUT_DIR/predictions${train}.${test}_merged
+for split in $(ls $models1); do
+python3 $srcdir/merge_entities.py $OUT_DIR/predictions${train}.${test}/$split.txt > $OUT_DIR/predictions${train}.${test}_merged/$split.txt
+done
+done; done
+

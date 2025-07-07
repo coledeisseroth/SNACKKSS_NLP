@@ -25,7 +25,7 @@ for pert in gene drug; do
 mkdir $pert/combo
 for model in distilbert biobert biomedbert; do
 mkdir $pert/combo/$model
-bash ../src/compare_text_classifiers.sh $pert/$combo/$model $pert/SNACKKSS_MC/$model/models $pert/CREEDS/$model/models/ $pert/SNACKKSS_MC/$model/training_datasets $pert/CREEDS/$model/training_datasets/ $pert/SNACKKSS_MC/$model/testing_datasets $pert/CREEDS/$model/testing_datasets
+bash ../src/compare_text_classifiers.sh $pert/combo/$model $pert/SNACKKSS_MC/$model/models $pert/CREEDS/$model/models/ $pert/SNACKKSS_MC/$model/training_datasets $pert/CREEDS/$model/training_datasets/ $pert/SNACKKSS_MC/$model/testing_datasets $pert/CREEDS/$model/testing_datasets
 done
 done
 
@@ -36,7 +36,7 @@ for modelname in DistilBERT BioBERT BioMedBERT; do
 model=$(echo $modelname | tr '[:upper:]' '[:lower:]')
 for train in 1 2 12 21; do
 comboname=$(echo $train | sed 's/12/SNACKKSS_MC+CREEDS/g' | sed 's/21/CREEDS+SNACKKSS_MC/g' | sed 's/1/SNACKKSS_MC/g' | sed 's/2/CREEDS/g')
-for test in 1 2; do cat $pert/combo/$model/predictions${train}.${test}/* | awk 'BEGIN {FS = "\t"} {gsub("_", "\t", $1); print $1 "\t" $2 "\t" $3}' | cut -f1,3,4 | sort -k3,3r | sort -k1,1 -u | cut -f2- | awk 'BEGIN {FS = "\t"; tp = 0; fp = 0; fn = 0} {if($1 == 0 && $2 == "POSITIVE"){fp++} else if($1 != 0 && $2 == "NEGATIVE"){fn++} else if($1 != 0 && $2 == "POSITIVE"){tp++}} END {print tp "\t" fp "\t" fn}'; done | paste -sd$'\t' | awk '{print "'$modelname'+'$comboname'\t" $0}'; done
+for test in 1 2; do cat $pert/combo/model/predictions${train}.${test}/* | awk 'BEGIN {FS = "\t"} {gsub("_", "\t", $1); print $1 "\t" $2 "\t" $3}' | cut -f1,3,4 | sort -k3,3r | sort -k1,1 -u | cut -f2- | awk 'BEGIN {FS = "\t"; tp = 0; fp = 0; fn = 0} {if($1 == 0 && $2 == "POSITIVE"){fp++} else if($1 != 0 && $2 == "NEGATIVE"){fn++} else if($1 != 0 && $2 == "POSITIVE"){tp++}} END {print tp "\t" fp "\t" fn}'; done | paste -sd$'\t' | awk '{print "'$modelname'+'$comboname'\t" $0}'; done
 done) > $pert/full_comparison.txt
 done
 

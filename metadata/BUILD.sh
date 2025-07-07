@@ -8,7 +8,7 @@ for db in CREEDS SNACKKSS_MC; do
 for gse in $(cat $db/studies.txt); do subfolder=$(echo $gse | awk '{if(length($1) < 7){print "GSEnnn"} else{print substr($1, 0, length($1) - 3) "nnn"}}'); echo https://ftp.ncbi.nlm.nih.gov/geo/series/$subfolder/$gse/soft/${gse}_family.soft.gz; done > $db/soft_file_links.txt
 done
 
-#Download the soft files
+#Download the soft files. Skips the ones that you already have.
 for db in CREEDS SNACKKSS_MC; do
 mkdir $db/soft_files
 cd $db/soft_files

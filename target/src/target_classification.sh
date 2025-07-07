@@ -31,16 +31,8 @@ done
 
 mkdir $OUT_DIR/models
 for split in $(ls $splitdir); do
-python3 $srcdir/target_finetune.py $OUT_DIR/training_datasets/$split.json $OUT_DIR/models/$split $model
+python3 $srcdir2/target_finetune.py $OUT_DIR/training_datasets/$split.json $OUT_DIR/models/$split $model
 done
 
-mkdir $OUT_DIR/predictions
-for split in $(ls $splitdir); do
-python3 $srcdir/indy_target_predict.py <(cat $OUT_DIR/name_labels_test/$split.txt | cut -f1,3 | sort -u) $OUT_DIR/models/$split > $OUT_DIR/predictions/$split.txt
-done
-
-mkdir $OUT_DIR/predictions_merged
-for split in $(ls $splitdir); do
-python3 $srcdir/merge_entities.py $OUT_DIR/predictions/$split.txt > $OUT_DIR/predictions_merged/$split.txt
-done
+cat $OUT_DIR/training_datasets/* | sort -u | shuf --random-source=<(openssl enc -aes-256-ctr -pass pass:"2025" -nosalt </dev/zero 2>/dev/null) > $OUT_DIR/final_training_dataset.json
 

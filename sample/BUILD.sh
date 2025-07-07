@@ -24,7 +24,7 @@ for pert in gene drug; do
 mkdir $pert/combo
 for model in distilbert biobert biomedbert; do
 mkdir $pert/combo/$model
-bash ../src/compare_text_classifiers.sh $pert/$combo/$model $pert/SNACKKSS_MC/$model/models $pert/CREEDS/$model/models/ $pert/SNACKKSS_MC/$model/training_datasets $pert/CREEDS/$model/training_datasets/ $pert/SNACKKSS_MC/$model/testing_datasets $pert/CREEDS/$model/testing_datasets
+bash ../src/compare_text_classifiers.sh $pert/combo/$model $pert/SNACKKSS_MC/$model/models $pert/CREEDS/$model/models/ $pert/SNACKKSS_MC/$model/training_datasets $pert/CREEDS/$model/training_datasets/ $pert/SNACKKSS_MC/$model/testing_datasets $pert/CREEDS/$model/testing_datasets
 done
 done
 

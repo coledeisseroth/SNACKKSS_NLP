@@ -1,4 +1,4 @@
-srcdir=$(dirname "$(realpath $0)")/..
+srcdir=$(dirname "$(realpath $0)")
 
 OUT_DIR=$1
 models1=$2
@@ -20,41 +20,41 @@ done
 
 mkdir $OUT_DIR/predictions2.2
 for split in $(ls $models1); do
-python3 $srcdir/text_classification_flexible_predict.py $models2/$split $test2/$split.txt 0 > $OUT_DIR/predictions2.2/$split.txt
+python3 $srcdir/text_classification_predict.py $models2/$split $test2/$split.txt 0 > $OUT_DIR/predictions2.2/$split.txt
 done
 
 mkdir $OUT_DIR/predictions1.1
 for split in $(ls $models1); do
-python3 $srcdir/text_classification_flexible_predict.py $models1/$split $test1/$split.txt 0 > $OUT_DIR/predictions1.1/$split.txt
+python3 $srcdir/text_classification_predict.py $models1/$split $test1/$split.txt 0 > $OUT_DIR/predictions1.1/$split.txt
 done
 
 mkdir $OUT_DIR/predictions2.1
 for split in $(ls $models1); do
-python3 $srcdir/text_classification_flexible_predict.py $models2/$split $test1/$split.txt 0 > $OUT_DIR/predictions2.1/$split.txt
+python3 $srcdir/text_classification_predict.py $models2/$split $test1/$split.txt 0 > $OUT_DIR/predictions2.1/$split.txt
 done
 
 mkdir $OUT_DIR/predictions12.1
 for split in $(ls $models1); do
-python3 $srcdir/text_classification_flexible_predict.py $OUT_DIR/models12/$split $test1/$split.txt 0 > $OUT_DIR/predictions12.1/$split.txt
+python3 $srcdir/text_classification_predict.py $OUT_DIR/models12/$split $test1/$split.txt 0 > $OUT_DIR/predictions12.1/$split.txt
 done
 
 mkdir $OUT_DIR/predictions21.1
 for split in $(ls $models1); do
-python3 $srcdir/text_classification_flexible_predict.py $OUT_DIR/models21/$split $test1/$split.txt 0 > $OUT_DIR/predictions21.1/$split.txt
+python3 $srcdir/text_classification_predict.py $OUT_DIR/models21/$split $test1/$split.txt 0 > $OUT_DIR/predictions21.1/$split.txt
 done
 
 mkdir $OUT_DIR/predictions1.2
 for split in $(ls $models1); do
-python3 $srcdir/text_classification_flexible_predict.py $models1/$split $test2/$split.txt 0 > $OUT_DIR/predictions1.2/$split.txt
+python3 $srcdir/text_classification_predict.py $models1/$split $test2/$split.txt 0 > $OUT_DIR/predictions1.2/$split.txt
 done
 
 mkdir $OUT_DIR/predictions12.2
 for split in $(ls $models1); do
-python3 $srcdir/text_classification_flexible_predict.py $OUT_DIR/models12/$split $test2/$split.txt 0 > $OUT_DIR/predictions12.2/$split.txt
+python3 $srcdir/text_classification_predict.py $OUT_DIR/models12/$split $test2/$split.txt 0 > $OUT_DIR/predictions12.2/$split.txt
 done
 
 mkdir $OUT_DIR/predictions21.2
 for split in $(ls $models1); do
-python3 $srcdir/text_classification_flexible_predict.py $OUT_DIR/models21/$split $test2/$split.txt 0 > $OUT_DIR/predictions21.2/$split.txt
+python3 $srcdir/text_classification_predict.py $OUT_DIR/models21/$split $test2/$split.txt 0 > $OUT_DIR/predictions21.2/$split.txt
 done
 
