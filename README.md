@@ -7,5 +7,5 @@ docker build -t snackkss-nlp-pipeline .
 docker save -o snackkss-nlp-pipeline.tar snackkss-nlp-pipeline
 docker rmi snackkss-nlp-pipeline
 docker load -i snackkss-nlp-pipeline.tar
-docker run -v $(pwd)/:/app/ snackkss-nlp-pipeline
+docker run -u $(whoami) -v $(pwd)/:/app/ snackkss-nlp-pipeline
 

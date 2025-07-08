@@ -20,3 +20,16 @@ cd control
 bash BUILD.sh
 cd ..
 
+mkdir output
+for stage in study sample target control; do
+for pert in gene drug; do
+mv $stage/$pert/final_model output/${pert}_${stage}_model
+done
+done
+
+for stage in study sample target control; do
+for pert in gene drug; do
+cat $stage/$pert/best_combination.txt | awk '{print "'$pert'\t'$stage'\t" $0}'
+done
+done > output/optima.txt
+
