@@ -1,5 +1,8 @@
 for pert in gene drug; do mkdir $pert; mkdir $pert/SNACKKSS_MC $pert/CREEDS; done
 
+#Note: While running the Dockerized version, we got the following error message:
+#join: /dev/fd/63:4: is not sorted:  Conditional KO in the B lineage
+#...yet the output looked okay. Consider re-running.
 #Studies either do or do not qualify for gene/drug perturbation. First, get those binary labels. Each dataset needs separate handling.
 (cat ../corpora/SNACKKSS_MC/corrected_curated_dataset.txt | cut -f2,4 | awk 'BEGIN {FS = "\t"} $2 == "KO" || $2 == "KD"' | cut -f1 | sort -u | awk '{print $1 "\t1"}'; cat ../corpora/SNACKKSS_MC/corrected_curated_dataset.txt | cut -f2 | sort -u | comm -23 - <(cat ../corpora/SNACKKSS_MC/corrected_curated_dataset.txt | cut -f2,4 | awk 'BEGIN {FS = "\t"} $2 == "KO" || $2 == "KD"' | cut -f1 | sort -u) | awk '{print $1 "\t0"}') | grep GSE | sort -u > gene/SNACKKSS_MC/labels.txt
 (cat ../corpora/SNACKKSS_MC/corrected_curated_dataset.txt | cut -f2,4 | awk 'BEGIN {FS = "\t"} $2 == "D"' | cut -f1 | sort -u | awk '{print $1 "\t1"}'; cat ../corpora/SNACKKSS_MC/corrected_curated_dataset.txt | cut -f2 | sort -u | comm -23 - <(cat ../corpora/SNACKKSS_MC/corrected_curated_dataset.txt | cut -f2,4 | awk 'BEGIN {FS = "\t"} $2 == "D"' | cut -f1 | sort -u) | awk '{print $1 "\t0"}') | grep GSE | sort -u > drug/SNACKKSS_MC/labels.txt
