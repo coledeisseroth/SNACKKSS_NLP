@@ -3,14 +3,20 @@ import sys
 import os
 import torch
 from datasets import load_dataset
+from transformers import AutoTokenizer
+from transformers import DataCollatorWithPadding
+import evaluate
+import numpy as np
+from transformers import AutoModelForSequenceClassification, TrainingArguments, Trainer
 
+np.random.seed(2025)
+torch.use_deterministic_algorithms(True)
+torch.manual_seed(2025)
 train_json = sys.argv[1]
 out_dir = sys.argv[2]
 ckpt = sys.argv[3]
 
 my_dataset = load_dataset('json', data_files={'train':train_json})
-
-from transformers import AutoTokenizer
 
 tokenizer = AutoTokenizer.from_pretrained(ckpt)
 
@@ -19,15 +25,9 @@ def preprocess_function(examples):
 
 tokenized_dataset = my_dataset.map(preprocess_function, batched=True)
 
-from transformers import DataCollatorWithPadding
-
 data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
 
-import evaluate
-
 accuracy = evaluate.load("accuracy")
-
-import numpy as np
 
 def compute_metrics(eval_pred):
     predictions, labels = eval_pred
@@ -37,9 +37,8 @@ def compute_metrics(eval_pred):
 id2label = {0: "NEGATIVE", 1: "POSITIVE"}
 label2id = {"NEGATIVE": 0, "POSITIVE": 1}
 
-from transformers import AutoModelForSequenceClassification, TrainingArguments, Trainer
-
 model = AutoModelForSequenceClassification.from_pretrained(ckpt, num_labels=2, id2label=id2label, label2id=label2id, ignore_mismatched_sizes=True)
+model.eval()
 
 training_args = TrainingArguments(
     output_dir=out_dir,
@@ -49,6 +48,8 @@ training_args = TrainingArguments(
     weight_decay=0.01,
     evaluation_strategy="no",
     save_strategy="no",
+    seed=2025,
+    use_cpu=True,
     gradient_checkpointing=True,
     load_best_model_at_end=True,
     push_to_hub=False,

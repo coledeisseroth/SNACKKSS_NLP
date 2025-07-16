@@ -1,3 +1,5 @@
+#!/bin/bash
+rm -rf gene drug
 for pert in gene drug; do mkdir $pert; mkdir $pert/SNACKKSS_MC $pert/CREEDS; done
 
 cat ../metadata/SNACKKSS_MC/perturbations_cleaned.txt | awk '$2 == "KO" || $2 == "KD"' | cut -f4- | awk 'BEGIN {FS = "\t"} {gsub(";", "\t", $1); print $2 "\t" $1}' | awk 'BEGIN {FS = "\t"} {for(i=2; i <= NF; i++){print $i "\t" $1}}' | sort -u | sed 's/;/\t/g' | sed 's/&/\t/g' | sort -k1,1 | awk 'BEGIN {FS = "\t"} {for(i = 2; i <= NF; i++){print $1 "\t" $i}}' | sort -u | sort -k1,1 | awk 'BEGIN {FS = "\t"; cur = ""; terms = ""} {if(cur != "" && cur != $1){print cur "\t" terms; terms = ""} cur = $1; terms = terms ";" $2} END {print cur "\t" terms}' | sed 's/\t;*/\t/g' | sed 's/;/:GENE;/g' | awk '{print $0 ":GENE"}' > gene/SNACKKSS_MC/target_names.txt

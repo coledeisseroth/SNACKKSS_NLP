@@ -1,4 +1,6 @@
 #!/bin/bash
+
+rm -rf gene drug
 for pert in gene drug; do mkdir $pert; mkdir $pert/SNACKKSS_MC $pert/CREEDS; done
 
 #Note: While running the Dockerized version, we got the following error message:

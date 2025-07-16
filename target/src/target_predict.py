@@ -4,14 +4,22 @@ from collections import defaultdict
 from datasets import load_dataset
 from datasets import Dataset
 from datasets import DatasetDict
+from transformers import AutoModelForTokenClassification
+from transformers import AutoTokenizer
 import torch
 
+torch.manual_seed(2025)
+torch.use_deterministic_algorithms(True)
 textfile = sys.argv[1]
 ckpt = sys.argv[2]
 
 from transformers import pipeline
 
-classifier = pipeline("ner", model=ckpt)
+tok = AutoTokenizer.from_pretrained(ckpt, add_prefix_space=True)
+mod = AutoModelForTokenClassification.from_pretrained(ckpt)
+mod.eval()
+
+classifier = pipeline("ner", model=mod, tokenizer=tok)
 
 for line in open(sys.argv[1]):
     line = line.strip().split("\t")

@@ -1,3 +1,5 @@
+#!/bin/bash
+rm -rf gene drug
 for pert in gene drug; do mkdir $pert; mkdir $pert/SNACKKSS_MC $pert/CREEDS; done
 
 #Get the pairs of samples where one has exactly one fewer perturbation of a given type than the other. If this isn't the case, then you know neither is an appropriate control to the other (except in rare cases where, for instance, one is evaluating heterozygous vs. full knockouts--but we do not consider those cases at the moment).

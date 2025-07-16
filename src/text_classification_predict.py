@@ -8,6 +8,8 @@ from transformers import pipeline
 from transformers import AutoTokenizer
 from transformers import AutoModelForSequenceClassification
 
+torch.use_deterministic_algorithms(True)
+torch.manual_seed(2025)
 model_dir = sys.argv[1]
 text_file = sys.argv[2]
 
@@ -47,6 +49,7 @@ for line in open(text_file):
     if not line[0] or not line[1]: continue
     tokenizer = AutoTokenizer.from_pretrained(model_dir)
     model = AutoModelForSequenceClassification.from_pretrained(model_dir)
+    model.eval()
     for segment in chew_tokens(line[1], tokenizer):
         inputs = tokenizer(segment, return_tensors="pt")
         with torch.no_grad(): logits = model(**inputs).logits

@@ -6,7 +6,11 @@ from datasets import load_dataset
 from datasets import Dataset
 from datasets import DatasetDict
 import torch
+import numpy as np
 
+np.random.seed(2025)
+torch.manual_seed(2025)
+torch.use_deterministic_algorithms(True)
 train_json = sys.argv[1]
 out_dir = sys.argv[2]
 ckpt = sys.argv[3]
@@ -67,10 +71,7 @@ import evaluate
 
 seqeval = evaluate.load("seqeval")
 
-import numpy as np
-
 labels = [label_list[i] for i in example[f"ner_tags"]]
-
 
 def compute_metrics(p):
     predictions, labels = p
@@ -96,6 +97,7 @@ def compute_metrics(p):
 from transformers import AutoModelForTokenClassification, TrainingArguments, Trainer
 
 model = AutoModelForTokenClassification.from_pretrained(ckpt, num_labels=len(label_list), id2label=id2label, label2id=label2id, ignore_mismatched_sizes=True)
+model.eval()
 
 training_args = TrainingArguments(
     output_dir=out_dir,
@@ -106,6 +108,8 @@ training_args = TrainingArguments(
     weight_decay=0.01,
     evaluation_strategy="no",
     save_strategy="no",
+    seed=2025,
+    use_cpu=True,
     gradient_checkpointing=True,
     load_best_model_at_end=True,
     push_to_hub=False,

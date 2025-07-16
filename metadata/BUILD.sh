@@ -39,7 +39,7 @@ for db in CREEDS SNACKKSS_MC; do
 cat $db/studies.txt | sort -u | shuf --random-source=<(openssl enc -aes-256-ctr -pass pass:"2025" -nosalt </dev/zero 2>/dev/null) > $db/shuffled_studies.txt
 mkdir $db/split
 cd $db/split
-split -l $(cat ../shuffled_studies.txt | wc -l | awk '{print int($1 / 10) + 1}') ../shuffled_studies.txt
+split -l $(cat ../shuffled_studies.txt | wc -l | awk '{print int($1 / 4) + 1}') ../shuffled_studies.txt
 cd ../..
 done
 
