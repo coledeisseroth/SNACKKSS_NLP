@@ -23,6 +23,7 @@ cat ../corpora/CREEDS/single_drug_fixed.txt | cut -f3,7,9 | grep GSE | sort -k2,
 #Get paired sample descriptions. Also, remove studies with exorbitant numbers of sample pairs (>10,000 pairs).
 for pert in gene drug; do for db in SNACKKSS_MC CREEDS; do
 cat $pert/$db/minusone_pairs.txt | grep -vwf <(cat $pert/$db/minusone_pairs.txt | cut -f1 | sort | uniq -c | awk '$1 > 10000 {print $2}' | sort -u) | sort -k2,2 | join -t$'\t' -1 2 -2 1 - <(cat ../metadata/$db/sample_info.txt | cut -f2- | sort -k1,1) | sort -k3,3 | join -t$'\t' -1 3 -2 1 - <(cat ../metadata/$db/sample_info.txt | cut -f2- | sort -k1,1) | awk 'BEGIN {FS = "\t"} {print $3 "\t" $2 "\t" $4 "\t" $1 "\t" $5}' | sort -u > $pert/$db/sample_pairs.txt
+done; done
 
 #List the sample pairs where we know one is NOT a control to the other
 for pert in gene drug; do for db in SNACKKSS_MC CREEDS; do
