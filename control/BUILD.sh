@@ -1,6 +1,6 @@
 #!/bin/bash
 rm -rf gene drug
-for pert in gene drug; do mkdir $pert; mkdir $pert/SNACKKSS_MC $pert/CREEDS; done
+for pert in gene drug; do mkdir -p $pert; mkdir -p $pert/SNACKKSS_MC -p $pert/CREEDS; done
 
 #Get the pairs of samples where one has exactly one fewer perturbation of a given type than the other. If this isn't the case, then you know neither is an appropriate control to the other (except in rare cases where, for instance, one is evaluating heterozygous vs. full knockouts--but we do not consider those cases at the moment).
 #SNACKKSS_MC gene
@@ -47,16 +47,16 @@ if [ $(echo $model | grep distilbert | wc -l) -gt 0 ]; then hfmodel='distilbert/
 elif [ $(echo $model | grep biobert | wc -l) -gt 0 ]; then hfmodel='dmis-lab/biobert-v1.1'
 else hfmodel='microsoft/BiomedNLP-BiomedBERT-base-uncased-abstract-fulltext'
 fi
-mkdir $pert/$db/$model
+mkdir -p $pert/$db/$model
 bash src/control_classification.sh $pert/$db/$model $pert/$db/labeled_pairs.txt $hfmodel ../metadata/$db/split
 done; done; done
 
 #Test the performance from training on one dataset and then the other
 for pert in gene drug; do
-mkdir $pert/combo
+mkdir -p $pert/combo
 for model in distilbert biobert biomedbert; do
-mkdir $pert/combo/$model
-bash ../src/compare_text_classifiers.sh $pert/$combo/$model $pert/SNACKKSS_MC/$model/models $pert/CREEDS/$model/models/ $pert/SNACKKSS_MC/$model/training_datasets $pert/CREEDS/$model/training_datasets/ $pert/SNACKKSS_MC/$model/testing_datasets $pert/CREEDS/$model/testing_datasets
+mkdir -p $pert/combo/$model
+bash ../src/compare_text_classifiers.sh $pert/combo/$model $pert/SNACKKSS_MC/$model/models $pert/CREEDS/$model/models/ $pert/SNACKKSS_MC/$model/training_json/ $pert/CREEDS/$model/training_json/ $pert/SNACKKSS_MC/$model/testing_datasets $pert/CREEDS/$model/testing_datasets
 done
 done
 
@@ -67,7 +67,10 @@ for modelname in DistilBERT BioBERT BioMedBERT; do
 model=$(echo $modelname | tr '[:upper:]' '[:lower:]')
 for train in 1 2 12 21; do
 comboname=$(echo $train | sed 's/12/SNACKKSS_MC+CREEDS/g' | sed 's/21/CREEDS+SNACKKSS_MC/g' | sed 's/1/SNACKKSS_MC/g' | sed 's/2/CREEDS/g')
-for test in 1 2; do cat $pert/combo/$model/predictions${train}.${test}/* | cut -f-2 | awk 'BEGIN {FS = "_"} {print $2 "\t" $0}' | sort -k1,1 | join -t$'\t' - <(cat $pert/combo/$model/predictions${train}.${test}/* | cut -d_ -f2 | sort | uniq -c | awk '{print $2 "\t" 1 / $1}' | sort -u | sort -k1,1) | sed 's/_/\t/g' | sed 's/POSITIVE/1/g' | sed 's/NEGATIVE/0/g' | awk 'BEGIN {FS = "\t"} {if($5 == 1){$5 = 1} else{$5 = 0} print $5 "\t" $6 "\t" $7}' | awk 'BEGIN {FS = "\t"; tp = 0; fp = 0; fn = 0} {if($1 == 1 && $2 == 1){tp += $3} else if($1 == 1){fn += $3} else if($2 == 1){fp += $3}} END {print tp "\t" fp "\t" fn}'; done | paste -sd$'\t' | awk '{print "'$modelname'+'$comboname'\t" $0}'; done
+for testcombo in 1SNACKKSS_MC 2CREEDS; do
+test=$(echo $testcombo | cut -b1)
+testname=$(echo $testcombo | cut -b2-)
+cat $pert/combo/$model/predictions${train}.${test}/* | cut -f-2 | awk 'BEGIN {FS = "_"} {print $2 "\t" $0}' | sort -k1,1 | join -t$'\t' - <(cat $pert/combo/$model/predictions${train}.${test}/* | cut -d_ -f2 | sort | uniq -c | awk '{print $2 "\t" 1 / $1}' | sort -u | sort -k1,1) | sed 's/_/\t/g' | awk 'BEGIN {FS = "\t"} {print $2 "_" $3 "_" $4 "\t" $6 "\t" $7}' | sort -k1,1 | join -t$'\t' <(cat $pert/$testname/labeled_pairs.txt | cut -f1 | awk 'BEGIN {FS = "_"} {print $1 "_" $2 "_" $3 "\t" $4}' | sort -k1,1) - | sed 's/POSITIVE/1/g' | sed 's/NEGATIVE/0/g' | awk 'BEGIN {FS = "\t"} {if($3 == 1){$3 = 1} else{$3 = 0} print $2 "\t" $3 "\t" $4}' | awk 'BEGIN {FS = "\t"; tp = 0; fp = 0; fn = 0} {if($1 == 1 && $2 == 1){tp += $3} else if($1 == 1){fn += $3} else if($2 == 1){fp += $3}} END {print tp "\t" fp "\t" fn}'; done | paste -sd$'\t' | awk '{print "'$modelname'+'$comboname'\t" $0}'; done
 done) > $pert/full_comparison.txt
 done
 
@@ -78,5 +81,4 @@ combo=$(cat $pert/best_combination.txt | sed 's/+/\t/g' | awk 'BEGIN {FS = "\t"}
 cat $(echo $combo | cut -d'#' -f2- | sed 's/#/ /g') > $pert/final_training_dataset.json
 python3 ../src/text_classification_finetune.py $pert/final_training_dataset.json $pert/final_model $(echo $combo | cut -d'#' -f1)
 done
-
 
