@@ -14,7 +14,7 @@ done
 
 mkdir $OUT_DIR/testing_datasets
 for split in $(ls $splitdir); do
-cat $OUT_DIR/labels_chewed.txt | awk 'BEGIN {FS = "_"} {print $1 "\t" $0}' | sort -k1,1 | join -t$'\t' - <(cat $splitdir/$split | sort -u) | cut -f2- | sort -u > $OUT_DIR/testing_datasets/$split.txt
+cat $OUT_DIR/labels_chewed.txt | awk 'BEGIN {FS = "_"} {print $1 "\t" $0}' | sort -k1,1 | join -t$'\t' - <(cat $splitdir/$split | sort -u) | cut -f2- | awk 'BEGIN {FS = "\t"} {print $1 "_" $2 "\t" $3}' | sort -u > $OUT_DIR/testing_datasets/$split.txt
 done
 
 mkdir $OUT_DIR/training_json
